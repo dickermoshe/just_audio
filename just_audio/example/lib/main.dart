@@ -107,6 +107,22 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   );
                 },
               ),
+              ElevatedButton(onPressed: (){
+                _player.setAudioSource(AudioSource.uri( Uri.parse("asset:///audio/nature.mp3"),tag: {"Tag":"Content"}));
+                _player.play();
+              }, child: Text("setAudioSource and play")),
+              // 
+              ElevatedButton(onPressed: (){
+                _player.load();
+                _player.play();
+              }, child: Text("load and play")),
+              // 
+              StreamBuilder<SequenceState?>(stream: _player.sequenceStateStream, builder: (context, snapshot) {
+                return Text("""Current Source ${snapshot.data?.currentSource}
+                            Current Tag ${snapshot.data?.currentSource?.tag}
+                            Current Duration ${snapshot.data?.currentSource?.duration}
+                            """);
+              },)
             ],
           ),
         ),
