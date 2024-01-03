@@ -99,14 +99,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   );
                 },
               ),
-              // ElevatedButton(
-              //     onPressed: ()  {
-              //       _player.setAudioSource(AudioSource.uri(
-              //           Uri.parse("asset:///audio/nature.mp3"),
-              //           tag: {"Tag": "Content"}),preload: true);
-              //       _player.play();
-              //     },
-              //     child: Text("setAudioSource with explicit load and play")),
               ElevatedButton(
                   onPressed: () async {
                     await _player.setAudioSource(AudioSource.uri(
