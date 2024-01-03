@@ -41,14 +41,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         onError: (Object e, StackTrace stackTrace) {
       print('A stream error occurred: $e');
     });
-    // Try to load audio from a source and catch any errors.
-    try {
-      // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
-      await _player.setAudioSource(AudioSource.uri(Uri.parse(
-          "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3")));
-    } catch (e) {
-      print("Error loading audio source: $e");
-    }
   }
 
   @override
@@ -107,22 +99,41 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   );
                 },
               ),
-              ElevatedButton(onPressed: (){
-                _player.setAudioSource(AudioSource.uri( Uri.parse("asset:///audio/nature.mp3"),tag: {"Tag":"Content"}));
-                _player.play();
-              }, child: Text("setAudioSource and play")),
-              // 
-              ElevatedButton(onPressed: (){
-                _player.load();
-                _player.play();
-              }, child: Text("load and play")),
-              // 
-              StreamBuilder<SequenceState?>(stream: _player.sequenceStateStream, builder: (context, snapshot) {
-                return Text("""Current Source ${snapshot.data?.currentSource}
+              // ElevatedButton(
+              //     onPressed: ()  {
+              //       _player.setAudioSource(AudioSource.uri(
+              //           Uri.parse("asset:///audio/nature.mp3"),
+              //           tag: {"Tag": "Content"}),preload: true);
+              //       _player.play();
+              //     },
+              //     child: Text("setAudioSource with explicit load and play")),
+              ElevatedButton(
+                  onPressed: () async {
+                    await _player.setAudioSource(AudioSource.uri(
+                        Uri.parse("asset:///audio/nature.mp3"),
+                        tag: {"Tag": "Content"}));
+                    await _player.play();
+                  },
+                  child: Text("setAudioSource and play")),
+              ElevatedButton(
+                  onPressed: () async {
+                    await _player.setAudioSource(AudioSource.uri(
+                        Uri.parse("asset:///audio/nature.mp3"),
+                        tag: {"Tag": "Content"}));
+                    await _player.load();
+                    await _player.play();
+                  },
+                  child: Text("setAudioSource,load and play")),
+
+              StreamBuilder<SequenceState?>(
+                stream: _player.sequenceStateStream,
+                builder: (context, snapshot) {
+                  return Text("""Current Source ${snapshot.data?.currentSource}
                             Current Tag ${snapshot.data?.currentSource?.tag}
                             Current Duration ${snapshot.data?.currentSource?.duration}
                             """);
-              },)
+                },
+              )
             ],
           ),
         ),
